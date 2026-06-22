@@ -1,0 +1,781 @@
+/* ===========================================================================
+   album.css
+   ---------------------------------------------------------------------------
+   Sistema visual del Álbum Mundial 2026.
+   Todas las clases usan el prefijo "am-" para nunca chocar con las
+   utilidades de Tailwind (que están bajo el prefijo "tw-", configurado
+   en index.html). Tailwind preflight está apagado: el reset y la base
+   tipográfica del sitio viven aquí.
+
+   Paleta:
+     --am-pitch     #0B3D2E  verde cancha oscuro (fondo de la app)
+     --am-pitchdark #082E22  verde cancha, sombra
+     --am-paper     #F4ECD8  papel crema (cromos / hojas)
+     --am-paperdark #E8DCBE  papel crema, sombra/pliegue
+     --am-ink       #16241C  tinta casi negra con tinte verde
+     --am-gold      #C9A227  dorado (acentos, capitán/estrella)
+     --am-crimson   #B3322B  rojo sello (faltante / acento)
+   Tipografía:
+     display  -> "Anton"        (títulos de país, números, "ÁLBUM")
+     mono     -> "JetBrains Mono" (códigos, contador 00/48, etiquetas QR)
+     cuerpo   -> "Karla"          (texto general)
+=========================================================================== */
+
+:root {
+  --am-pitch: #0B3D2E;
+  --am-pitchdark: #082E22;
+  --am-paper: #F4ECD8;
+  --am-paperdark: #E8DCBE;
+  --am-ink: #16241C;
+  --am-gold: #C9A227;
+  --am-crimson: #B3322B;
+
+  --am-font-display: "Anton", "Bebas Neue", sans-serif;
+  --am-font-mono: "JetBrains Mono", monospace;
+  --am-font-body: "Karla", system-ui, sans-serif;
+}
+
+/* ---------- Reset mínimo (preflight de Tailwind está apagado) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+button { font: inherit; cursor: pointer; background: none; border: none; }
+ul { margin: 0; padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+input { font: inherit; }
+
+/*
+ * Tailwind (cargado por CDN en index.html) genera ".tw-hidden" con su
+ * propio prefijo "tw-". La definimos también aquí como respaldo: si el
+ * CDN de Tailwind no llega a cargar (red lenta, bloqueada, sin conexión),
+ * la app sigue pudiendo mostrar/ocultar pantallas y modales correctamente.
+ * !important solo aquí, a propósito, porque esta clase representa un
+ * estado binario (visible/oculto) que nunca debe perder ante otra regla.
+ */
+.tw-hidden { display: none !important; }
+
+.am-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================================
+   BASE
+========================================================================= */
+.am-body {
+  font-family: var(--am-font-body);
+  color: var(--am-paper);
+  background: var(--am-pitch);
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05), transparent 60%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 2px,
+      transparent 2px,
+      transparent 38px
+    );
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.am-btn {
+  font-family: var(--am-font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.am-btn:active { transform: scale(0.96); }
+
+.am-btn--primary {
+  background: var(--am-gold);
+  color: var(--am-ink);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+}
+.am-btn--primary:hover { background: #d9b13a; }
+
+.am-btn--ghost {
+  background: rgba(255,255,255,0.08);
+  color: var(--am-paper);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.am-btn--ghost:hover { background: rgba(255,255,255,0.16); }
+
+/* =========================================================================
+   LOGIN
+========================================================================= */
+.am-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.am-login__card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--am-paper);
+  color: var(--am-ink);
+  border-radius: 18px;
+  padding: 2.25rem 2rem;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 30px 60px -20px rgba(0,0,0,0.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.am-login__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.am-login__kicker {
+  font-family: var(--am-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--am-crimson);
+  margin: 0 0 0.4rem;
+}
+
+.am-login__title {
+  font-family: var(--am-font-display);
+  font-size: clamp(1.7rem, 7vw, 2.4rem);
+  line-height: 1.05;
+  margin: 0 0 0.65rem;
+  color: var(--am-pitch);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.am-login__sub {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #4b4636;
+  margin: 0 0 1.5rem;
+}
+
+.am-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.am-login__input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--am-paperdark);
+  background: #fffdf7;
+  color: var(--am-ink);
+  font-size: 1rem;
+}
+.am-login__input:focus {
+  outline: none;
+  border-color: var(--am-pitch);
+}
+
+.am-login__existing {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--am-paperdark);
+}
+
+.am-login__existing-label {
+  font-family: var(--am-font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7259;
+  margin: 0 0 0.6rem;
+}
+
+.am-login__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.am-login__list button {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: var(--am-paperdark);
+  color: var(--am-pitch);
+  transition: background-color 0.15s ease;
+}
+.am-login__list button:hover { background: var(--am-gold); }
+
+/* =========================================================================
+   TOPBAR
+========================================================================= */
+.am-topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.5rem;
+  background: var(--am-pitchdark);
+  border-bottom: 3px solid var(--am-gold);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.am-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.am-topbar__crest { font-size: 1.3rem; }
+.am-topbar__title {
+  font-family: var(--am-font-display);
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.am-topbar__progress {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1 1 220px;
+  min-width: 160px;
+  max-width: 360px;
+}
+
+.am-topbar__progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+}
+
+.am-topbar__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--am-gold), #e9c869);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(.2,.8,.2,1);
+}
+
+.am-topbar__progress-label {
+  font-family: var(--am-font-mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--am-paperdark);
+}
+
+.am-topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.am-topbar__user-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.3rem 0.7rem;
+  background: rgba(201,162,39,0.15);
+  border: 1px solid rgba(201,162,39,0.4);
+  border-radius: 999px;
+  color: var(--am-gold);
+}
+
+/* =========================================================================
+   LIBRO / PÁGINAS
+========================================================================= */
+.am-book-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.25rem 0.5rem 1rem;
+}
+
+.am-page-nav {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: var(--am-paper);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.am-page-nav:hover { background: rgba(255,255,255,0.18); }
+.am-page-nav:active { transform: scale(0.92); }
+.am-page-nav:disabled { opacity: 0.25; cursor: default; }
+.am-page-nav:disabled:hover { background: rgba(255,255,255,0.08); }
+
+.am-book {
+  position: relative;
+  width: min(880px, 92vw);
+  aspect-ratio: 16 / 10;
+  perspective: 1800px;
+}
+
+.am-sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--am-paper);
+  border-radius: 14px;
+  box-shadow: 0 25px 50px -15px rgba(0,0,0,0.6);
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  transition: transform 0.38s cubic-bezier(.4,.1,.2,1), opacity 0.32s ease;
+}
+
+/* hoja activa: visible y plana */
+.am-sheet[data-state="current"] {
+  transform: rotateY(0deg);
+  z-index: 5;
+  opacity: 1;
+  pointer-events: auto;
+}
+/* hojas "ya pasadas": dobladas hacia la izquierda, fuera de vista */
+.am-sheet[data-state="before"] {
+  transform: rotateY(-178deg);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+/* hojas futuras: apiladas detrás, sin rotar */
+.am-sheet[data-state="after"] {
+  transform: rotateY(0deg);
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.am-sheet__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--am-paperdark);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.am-sheet__conf {
+  font-family: var(--am-font-display);
+  text-transform: uppercase;
+  color: var(--am-pitch);
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.01em;
+}
+
+.am-sheet__pageno {
+  font-family: var(--am-font-mono);
+  color: #8a8061;
+  font-size: 0.78rem;
+}
+
+.am-sheet__grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* =========================================================================
+   SLOT / CROMO
+========================================================================= */
+.am-slot {
+  position: relative;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Slot vacío: hueco troquelado a la espera del cromo */
+.am-slot[data-filled="false"] {
+  background:
+    repeating-linear-gradient(135deg, rgba(11,61,46,0.05) 0 10px, transparent 10px 20px);
+  border: 2px dashed var(--am-paperdark);
+}
+
+.am-slot__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: #9a8f6d;
+  text-align: center;
+  padding: 0.4rem;
+}
+
+.am-slot__placeholder-num {
+  font-family: var(--am-font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--am-pitch);
+  opacity: 0.55;
+}
+
+.am-slot__placeholder-name {
+  font-size: 0.68rem;
+  line-height: 1.2;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Cromo pegado */
+.am-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  background: linear-gradient(160deg, #fffdf6, #f1e6c8 70%);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 6px 14px -6px rgba(0,0,0,0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.45rem 0.5rem 0.4rem;
+  color: var(--am-ink);
+  transform: rotate(var(--am-tilt, 0deg));
+  overflow: hidden; /* importante: recorta el video a las esquinas redondeadas */
+  cursor: pointer;
+}
+
+/* Contenedor del video del jugador: ocupa la zona superior de la
+   tarjeta, detrás del texto. */
+.am-card__media {
+  position: absolute;
+  inset: 0 0 30% 0; /* cubre el 70% superior de la tarjeta */
+  background-color: var(--am-paperdark); /* placeholder mientras carga */
+  overflow: hidden;
+}
+
+.am-card__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Velo degradado para que el texto (jugador/país) siga siendo legible
+   encima del video, igual que en los cromos físicos reales. */
+.am-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(22,36,28,0.85) 0%, rgba(22,36,28,0) 55%);
+  pointer-events: none;
+}
+
+/* Botón de play: visible sobre el poster en reposo, se oculta mientras
+   el video está reproduciéndose. */
+.am-card__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(22,36,28,0.55);
+  color: #fff;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(1px);
+}
+.am-card:hover .am-card__play { transform: translate(-50%, -55%) scale(1.08); }
+
+.am-card--reproduciendo .am-card__play {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.am-card::after {
+  /* esquinas de "pegado" tipo cinta/sello */
+  content: "";
+  position: absolute;
+  top: -6px; left: -6px;
+  width: 18px; height: 18px;
+  background: rgba(255,255,255,0.55);
+  border-radius: 2px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+  transform: rotate(-8deg);
+  z-index: 2;
+}
+
+.am-card__top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.am-card__code {
+  font-family: var(--am-font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--am-ink);
+  background: rgba(244,236,216,0.85); /* papel semi-opaco: legible sobre cualquier foto */
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.am-card__star {
+  position: relative;
+  z-index: 2;
+  color: var(--am-gold);
+  font-size: 0.75rem;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+}
+
+.am-card__player {
+  position: relative;
+  z-index: 2;
+  font-family: var(--am-font-display);
+  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  line-height: 1.08;
+  text-transform: uppercase;
+  color: #fff; /* sobre la foto oscurecida por el degradado */
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.am-card__country {
+  position: relative;
+  z-index: 2;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--am-crimson);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* animación de "pegado": cae, rebota y se asienta con una leve rotación */
+@keyframes am-pegar {
+  0%   { transform: translateY(-60px) scale(0.7) rotate(0deg); opacity: 0; }
+  55%  { transform: translateY(6px) scale(1.05) rotate(var(--am-tilt, 0deg)); opacity: 1; }
+  75%  { transform: translateY(-2px) scale(0.98) rotate(var(--am-tilt, 0deg)); }
+  100% { transform: translateY(0) scale(1) rotate(var(--am-tilt, 0deg)); }
+}
+.am-card--pegando {
+  animation: am-pegar 0.55s cubic-bezier(.3,.6,.3,1.3) both;
+}
+
+/* =========================================================================
+   DOTS de navegación de hojas
+========================================================================= */
+.am-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0 1.75rem;
+  flex-wrap: wrap;
+}
+
+.am-dots button {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.am-dots button[aria-current="true"] {
+  background: var(--am-gold);
+  transform: scale(1.3);
+}
+
+/* =========================================================================
+   TOAST
+========================================================================= */
+.am-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--am-ink);
+  color: var(--am-paper);
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px -8px rgba(0,0,0,0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.am-toast--show {
+  animation: am-toast-in 0.25s ease both;
+}
+@keyframes am-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.am-toast--ok::before { content: "✓"; color: #6fcf97; }
+.am-toast--warn::before { content: "!"; color: var(--am-gold); }
+.am-toast--error::before { content: "×"; color: var(--am-crimson); }
+
+/* =========================================================================
+   MODAL hoja de cromos / impresión
+========================================================================= */
+.am-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 20, 14, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  z-index: 200;
+}
+
+.am-modal {
+  background: var(--am-paper);
+  color: var(--am-ink);
+  border-radius: 16px;
+  max-width: 760px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.am-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.am-modal__title {
+  font-family: var(--am-font-display);
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  color: var(--am-pitch);
+  margin: 0;
+}
+
+.am-modal__close {
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #8a8061;
+}
+.am-modal__close:hover { color: var(--am-crimson); }
+
+.am-modal__sub {
+  font-size: 0.85rem;
+  color: #4b4636;
+  margin: 0.5rem 0 1.25rem;
+  line-height: 1.5;
+}
+
+.am-print-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.85rem;
+}
+
+.am-print-card {
+  background: #fffdf7;
+  border: 1px solid var(--am-paperdark);
+  border-radius: 10px;
+  padding: 0.65rem;
+  text-align: center;
+}
+
+.am-print-card__qr {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 0.4rem;
+}
+.am-print-card__qr svg { width: 100%; height: 100%; }
+
+.am-print-card__name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.am-print-card__country {
+  font-size: 0.62rem;
+  color: var(--am-crimson);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.am-print-card[data-filled="true"] {
+  opacity: 0.4;
+}
+.am-print-card[data-filled="true"]::after {
+  content: "Ya pegado";
+  display: block;
+  font-family: var(--am-font-mono);
+  font-size: 0.62rem;
+  color: var(--am-pitch);
+  margin-top: 0.25rem;
+}
+
+.am-modal__footer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* =========================================================================
+   RESPONSIVE
+========================================================================= */
+@media (max-width: 720px) {
+  .am-topbar { padding: 0.7rem 1rem; }
+  .am-topbar__title { font-size: 0.9rem; }
+  .am-book { aspect-ratio: 3 / 4; }
+  .am-sheet__grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+  .am-page-nav { width: 36px; height: 36px; font-size: 1.1rem; }
+  .am-book-wrap { padding-top: 1.25rem; }
+}
+
+@media print {
+  .am-modal-backdrop { position: static; background: none; padding: 0; }
+  .am-modal { box-shadow: none; max-height: none; }
+  .am-modal__header, .am-modal__sub, .am-modal__footer { display: none; }
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Álbum Mundial 2026 · 48 cromos</title>
+<meta name="description" content="Álbum digital del Mundial 2026: 48 selecciones, 48 cromos, escanea el QR de cada figurita y pégala en su espacio." />
+
+<!-- Tailwind vía CDN, configurado para no chocar con las clases propias del sitio (prefijo "tw-" en utilidades de Tailwind). -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    prefix: "tw-",
+    corePlugins: { preflight: false }, // preflight apagado: este sitio define su propio reset en album.css
+    theme: {
+      extend: {
+        colors: {
+          pitch:   "#0B3D2E",
+          pitchdark:"#082E22",
+          paper:   "#F4ECD8",
+          paperdark:"#E8DCBE",
+          inkgreen:"#163C2C",
+          gold:    "#C9A227",
+          crimson: "#B3322B",
+        },
+      },
+    },
+  };
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Karla:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/album.css" />
+</head>
+<body class="am-body">
+
+  <!-- ===================== PANTALLA DE INICIO DE SESIÓN ===================== -->
+  <section id="am-login" class="am-login">
+    <div class="am-login__card">
+      <p class="am-login__kicker">Mundial 2026 · 48 selecciones</p>
+      <h1 class="am-login__title">Álbum&nbsp;de&nbsp;Figuritas</h1>
+      <p class="am-login__sub">Escribe tu nombre para abrir tu álbum. Cada nombre guarda su propio progreso en este navegador.</p>
+
+      <form id="am-login-form" class="am-login__form" autocomplete="off">
+        <label for="am-login-input" class="am-sr-only">Tu nombre</label>
+        <input
+          id="am-login-input"
+          class="am-login__input"
+          type="text"
+          placeholder="Tu nombre"
+          maxlength="24"
+          required
+        />
+        <button type="submit" class="am-btn am-btn--primary">Abrir mi álbum</button>
+      </form>
+
+      <div id="am-login-existing" class="am-login__existing tw-hidden">
+        <p class="am-login__existing-label">Álbumes ya empezados aquí:</p>
+        <ul id="am-login-list" class="am-login__list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== APP DEL ÁLBUM ===================== -->
+  <div id="am-app" class="am-app tw-hidden">
+
+    <!-- Barra superior -->
+    <header class="am-topbar">
+      <div class="am-topbar__brand">
+        <span class="am-topbar__crest">⚽</span>
+        <span class="am-topbar__title">Álbum Mundial 2026</span>
+      </div>
+
+      <div class="am-topbar__progress">
+        <div class="am-topbar__progress-track">
+          <div id="am-progress-fill" class="am-topbar__progress-fill" style="width:0%"></div>
+        </div>
+        <span id="am-progress-label" class="am-topbar__progress-label">0 / 48</span>
+      </div>
+
+      <div class="am-topbar__user">
+        <span id="am-user-name" class="am-topbar__user-name">—</span>
+        <button id="am-btn-imprimir" class="am-btn am-btn--ghost" type="button">Hoja de cromos</button>
+        <button id="am-btn-logout" class="am-btn am-btn--ghost" type="button">Cambiar álbum</button>
+      </div>
+    </header>
+
+    <!-- Libro del álbum -->
+    <main class="am-book-wrap">
+      <button id="am-page-prev" class="am-page-nav am-page-nav--prev" type="button" aria-label="Hoja anterior">‹</button>
+
+      <div id="am-book" class="am-book">
+        <!-- las hojas se inyectan dinámicamente desde album.js -->
+      </div>
+
+      <button id="am-page-next" class="am-page-nav am-page-nav--next" type="button" aria-label="Siguiente hoja">›</button>
+    </main>
+
+    <!-- Indicador de hojas (puntos) -->
+    <nav id="am-dots" class="am-dots" aria-label="Ir a hoja"></nav>
+  </div>
+
+  <!-- ===================== TOAST de pegado / aviso ===================== -->
+  <div id="am-toast" class="am-toast tw-hidden" role="status" aria-live="polite"></div>
+
+  <!-- ===================== MODAL: Hoja de cromos para escanear / imprimir ===================== -->
+  <div id="am-print-modal" class="am-modal-backdrop tw-hidden">
+    <div class="am-modal">
+      <header class="am-modal__header">
+        <h2 class="am-modal__title">Tu hoja de cromos</h2>
+        <button id="am-print-close" class="am-modal__close" type="button" aria-label="Cerrar">×</button>
+      </header>
+      <p class="am-modal__sub">
+        Cada figurita tiene su propio código QR. Escanéalo con tu celular (o haz clic si estás en este mismo dispositivo)
+        y se pegará automáticamente en su espacio del álbum — solo en ese espacio.
+      </p>
+      <div id="am-print-grid" class="am-print-grid"></div>
+      <div class="am-modal__footer">
+        <button id="am-print-page" class="am-btn am-btn--primary" type="button">Imprimir esta hoja</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Librería QR vendorizada (sin dependencias de CDN externas) -->
+  <script src="js/qrcode.min.js"></script>
+
+  <!-- Módulos del proyecto -->
+  <script src="js/data.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/qrgen.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/album.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
