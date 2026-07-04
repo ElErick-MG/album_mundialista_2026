@@ -105,7 +105,7 @@
       $card.className = "am-print-card";
       $card.dataset.filled = String(pegado);
 
-      const svg = await window.AlbumQR.svgParaCromo(cromo.id, usuarioId);
+      const svg = await window.AlbumQR.svgParaCromo(cromo.id);
       $card.innerHTML = `
         <div class="am-print-card__qr">${svg}</div>
         <p class="am-print-card__name">${cromo.jugador}</p>

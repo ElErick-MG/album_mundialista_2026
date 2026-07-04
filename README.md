@@ -27,17 +27,18 @@ Netlify, Vercel, un bucket S3...).
 Cada figurita codifica una URL como:
 
 ```
-https://tu-dominio.com/index.html?cromo=arg&u=carlos
+https://tu-dominio.com/index.html?cromo=arg
 ```
 
 - `cromo` = id único del cromo (ver `js/data.js`)
-- `u` = id del usuario que generó esa hoja de cromos (opcional; si la persona
-  ya tiene sesión abierta en el navegador donde escanea, se usa esa sesión)
 
-Al abrir esa URL, `js/router.js` detecta los parámetros, `js/app.js` valida
+Al abrir esa URL, `js/router.js` detecta el parámetro, `js/app.js` valida
 que el cromo exista, y `js/album.js` lo pega con una animación, navegando
 automáticamente a la hoja donde vive ese cromo. Si el código no corresponde
 a ningún cromo del álbum, se avisa con un mensaje de error sin romper nada.
+
+El QR ya no queda atado al usuario que lo imprimió: cualquiera que lo escanee
+puede iniciar sesión en su propia cuenta y pegar ese cromo en su álbum.
 
 Para imprimir/compartir la hoja de QR de cada usuario: botón **"Hoja de
 cromos"** en la barra superior, una vez con sesión iniciada.
